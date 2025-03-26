@@ -12,11 +12,11 @@ app.use(cors());
 dotenv.config();
 
 const pool = new Pool({
-  user: process.env.POSTGRES_USER, 
-  host: process.env.POSTGRES_HOST, 
-  database: process.env.POSTGRES_DB, 
-  password: process.env.POSTGRES_PASSWORD, 
-  port: Number(process.env.POSTGRES_PORT), 
+  user: process.env.POSTGRES_USER,
+  host: process.env.POSTGRES_HOST,
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
+  port: Number(process.env.POSTGRES_PORT),
 });
 
 // Test the database connection
@@ -28,11 +28,22 @@ pool.connect((err) => {
   }
 });
 
-app.get("/", async (req, res) => {
+app.get("/api/airports", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM airports");
     res.json(result.rows);
   } catch (error) {
+    console.error("Error fetching tables:", error);
+    res.status(500).send("Error fetching tables");
+  }
+});
+
+app.get("/api/bookings", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM bookings");
+    res.json(result.rows);
+  }
+  catch (error) {
     console.error("Error fetching tables:", error);
     res.status(500).send("Error fetching tables");
   }
